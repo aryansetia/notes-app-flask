@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from os import path 
+from flask_login import LoginManager
 
 db = SQLAlchemy()
 DB_NAME = "database.db"
@@ -8,7 +9,7 @@ DB_NAME = "database.db"
 def create_app():
     app = Flask(__name__)
     app.config['SECRET_KEY'] = '3e89a5fec09ceabb770571cac2a32d10'
-    app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{app.root_path}/site.db"
+    app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{app.root_path}/{DB_NAME}"
 
 
     db.init_app(app)
@@ -21,6 +22,14 @@ def create_app():
     
     from .models import User, Note 
     create_database(app)
+
+    login_manager = LoginManager()
+    login_manager.login_view = "auth.login"
+    login_manager.init_app(app)
+
+    @login_manager.user_loader
+    def load_user(id): 
+        return User.query.get(int(id))
 
     return app
 

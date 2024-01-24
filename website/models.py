@@ -16,7 +16,7 @@ class User(db.Model, UserMixin):
     email: Mapped[str] =  mapped_column(String(150))
     password: Mapped[str] = mapped_column(String(150))
     first_name: Mapped[str] = mapped_column(String(150))
-    children: Mapped[List["Note"]] = relationship() 
+    notes: Mapped[List["Note"]] = relationship() 
 
 # one to many - that means one user can create multiple notes 
 class Note(db.Model): 
